@@ -38,6 +38,15 @@
     },
     {
       "path": "./apps/notification-service"
+    },
+    {
+      "path": "./libs/hashtag-common-ui"
+    },
+    {
+      "path": "./libs/hashtag-common-utils"
+    },
+    {
+      "path": "./libs/hashtag-common-types"
     }
   ]
 }
