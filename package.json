@@ -8,6 +8,7 @@
     "@react-router/node": "^7.2.0",
     "@react-router/serve": "^7.2.0",
     "axios": "^1.6.0",
+    "dotenv": "^17.2.1",
     "express": "^4.21.2",
     "isbot": "^4.4.0",
     "react": "19.0.0",

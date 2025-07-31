@@ -26,6 +26,18 @@
     },
     {
       "path": "./apps/post-service"
+    },
+    {
+      "path": "./apps/group-service-e2e"
+    },
+    {
+      "path": "./apps/group-service"
+    },
+    {
+      "path": "./apps/notification-service-e2e"
+    },
+    {
+      "path": "./apps/notification-service"
     }
   ]
 }

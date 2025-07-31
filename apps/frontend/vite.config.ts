@@ -6,13 +6,13 @@ export default defineConfig(() => ({
   root: __dirname,
   cacheDir: '../../node_modules/.vite/apps/frontend',
   server: {
-    port: 4200,
+    port: process.env.FRONTEND_SERVING_PORT ? Number(process.env.FRONTEND_SERVING_PORT) : 4200,
     host: 'localhost',
   },
   preview: {
-    port: 4300,
+    port: process.env.FRONTEND_PREVIEW_PORT ? Number(process.env.FRONTEND_PREVIEW_PORT) : 4300,
     host: 'localhost',
-  },
+  },  
   plugins: [!process.env.VITEST && reactRouter()],
   // Uncomment this if you are using workers.
   // worker: {

@@ -14,10 +14,10 @@ const app = express();
 app.use('/assets', express.static(path.join(__dirname, 'assets')));
 
 app.get('/api', (req, res) => {
-  res.send({ message: 'Welcome to api-gateway!' });
+  res.send({ message: 'Welcome to group-service!' });
 });
 
-const port = process.env.API_GATEWAY_PORT || 3100;
+const port = process.env.GROUP_SERVICE_PORT || 3200;
 const server = app.listen(port, () => {
   console.log(`Listening at http://localhost:${port}/api`);
 });
