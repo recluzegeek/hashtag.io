@@ -1,0 +1,10 @@
+{
+  "name": "@hashtag.io-microservices/frontend-e2e",
+  "version": "0.0.1",
+  "private": true,
+  "nx": {
+    "implicitDependencies": [
+      "@hashtag.io-microservices/frontend"
+    ]
+  }
+}
