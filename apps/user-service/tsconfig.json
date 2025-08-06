@@ -4,6 +4,12 @@
   "include": [],
   "references": [
     {
+      "path": "../../libs/hashtag-common-types"
+    },
+    {
+      "path": "../../libs/hashtag-common-utils"
+    },
+    {
       "path": "./tsconfig.app.json"
     },
     {
