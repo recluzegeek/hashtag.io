@@ -11,9 +11,5 @@
     "types": ["node"]
   },
   "include": ["src/**/*.ts"],
-  "references": [
-    {
-      "path": "../hashtag-common-types/tsconfig.lib.json"
-    }
-  ]
+  "references": []
 }

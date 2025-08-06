@@ -4,9 +4,6 @@
   "include": [],
   "references": [
     {
-      "path": "../hashtag-common-types"
-    },
-    {
       "path": "./tsconfig.lib.json"
     }
   ]

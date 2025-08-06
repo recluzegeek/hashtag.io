@@ -6,7 +6,7 @@ This project is inspired from [Subhajit25Mondal/hashtag.io](https://github.com/S
 
 ## Requirements
 
-Latest version of NodeJs, MongoDB, and [suggested extensions](./.vscode/extensions.json). 
+Latest version of NodeJs, MongoDB, and [suggested extensions](./.vscode/extensions.json).
 
 ### Install Nx Console
 
@@ -44,6 +44,8 @@ Nx Console is an editor extension that enriches your developer experience. It le
 ## Setup Guide
 
 1. Install the [suggested extensions](./.vscode/extensions.json) from extensions panel.
+1. Copy the `.env.example` to `.example` and replace the values accordingly.
+1. Generate secret keys using `openssl rand -base64 32` for `ACCESS_TOKEN_SECRET` and `REFRESH_TOKEN_SECRET`
 1. Run `npm install` in the project root.
 1. You can run each project individually by checking available commands using:
 
@@ -126,4 +128,3 @@ npx nx g @nx/react:lib mylib
 You can use `npx nx list` to get a list of installed plugins. Then, run `npx nx list <plugin-name>` to learn about more specific capabilities of a particular plugin. Alternatively, [install Nx Console](https://nx.dev/getting-started/editor-setup?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) to browse plugins and generators in your IDE.
 
 [Learn more about Nx plugins &raquo;](https://nx.dev/concepts/nx-plugins?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) | [Browse the plugin registry &raquo;](https://nx.dev/plugin-registry?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
