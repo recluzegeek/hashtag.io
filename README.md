@@ -56,15 +56,15 @@ Nx Console is an editor extension that enriches your developer experience. It le
 
    Or better, use the [Nx Console extension](https://marketplace.visualstudio.com/items?itemName=nrwl.angular-console) to easily browse and run tasks within your IDE.
 
-![Nx Console Preview](./images/nx-console-preview.png)
+    ![Nx Console Preview](./images/nx-console-preview.png)
 
-For an introduction to Nx workspace capabilities, visit the [Nx monorepo tutorial](https://nx.dev/getting-started/tutorials/react-monorepo-tutorial?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) or run:
+    For an introduction to Nx workspace capabilities, visit the [Nx monorepo tutorial](https://nx.dev/getting-started/tutorials/react-monorepo-tutorial?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) or run:
 
-```bash
-nx graph --no-open
-```
+    ```bash
+    nx graph --no-open
+    ```
 
-to visualize project dependencies and architecture.
+    to visualize project dependencies and architecture.
 
 ### How to run Task (Project)?
 

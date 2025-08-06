@@ -1,4 +1,9 @@
 {
-    "nxConsole.generateAiAgentRules": true,
-    "workbench.sideBar.location": "right"
+  "nxConsole.generateAiAgentRules": true,
+  "workbench.sideBar.location": "right",
+  "editor.mouseWheelZoom": true,
+  "files.autoSave": "onWindowChange",
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "prettier.printWidth": 100
 }

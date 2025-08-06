@@ -1,4 +1,9 @@
-import servicesConfig, { ServicesConfig } from "./services.config.ts";
+import {
+  ServicesConfig,
+  SecretsConfig,
+  secretsConfig,
+  servicesConfig,
+} from './services.config.js';
 
 interface ServerConfig {
   port: number | string;
@@ -12,23 +17,32 @@ interface DatabaseConfig {
 interface AppConfig {
   server: ServerConfig;
   database: DatabaseConfig;
-  services: ServicesConfig,
+  services: ServicesConfig;
+  secrets: SecretsConfig;
   isDev: boolean;
   isProd: boolean;
 }
 
-const env = (process.env.NODE_ENV || 'development') as 'development' | 'production';
+const env = (process.env.NODE_ENV || 'development') as
+  | 'development'
+  | 'production';
 
-const config: Record<'development' | 'production', Omit<AppConfig, 'isDev' | 'isProd'>> = {
+const config: Record<
+  'development' | 'production',
+  Omit<AppConfig, 'isDev' | 'isProd'>
+> = {
   development: {
     server: {
       port: process.env.PORT || 3000,
       hostname: process.env.HOSTNAME || 'localhost',
     },
     database: {
-      url: `mongodb://${process.env.DB_HOST || 'localhost'}:${process.env.DB_PORT || 27017}/${process.env.DB_NAME || 'hashtag_dev'}`,
+      url: `mongodb://${process.env.DB_HOST || 'localhost'}:${
+        process.env.DB_PORT || 27017
+      }/${process.env.DB_NAME || 'hashtag_dev'}`,
     },
     services: servicesConfig,
+    secrets: secretsConfig,
   },
   production: {
     server: {
@@ -36,16 +50,17 @@ const config: Record<'development' | 'production', Omit<AppConfig, 'isDev' | 'is
       hostname: process.env.HOSTNAME || 'localhost',
     },
     database: {
-      url: `mongodb://${process.env.DB_HOST || 'localhost'}:${process.env.DB_PORT || 27017}/${process.env.DB_NAME || 'hashtag_prod'}`,
+      url: `mongodb://${process.env.DB_HOST || 'localhost'}:${
+        process.env.DB_PORT || 27017
+      }/${process.env.DB_NAME || 'hashtag_prod'}`,
     },
     services: servicesConfig,
+    secrets: secretsConfig,
   },
 };
 
-const selectedConfig: AppConfig = {
+export const selectedConfig: AppConfig = {
   ...config[env],
   isDev: env === 'development',
   isProd: env === 'production',
 };
-
-export default selectedConfig;
