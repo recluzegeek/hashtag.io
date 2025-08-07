@@ -2,15 +2,14 @@ import express from 'express';
 import type { Request, Response } from 'express';
 import { createProxyMiddleware } from 'http-proxy-middleware';
 
-import IUser from '@hashtag-common-types';
-import { selectedConfig } from '@hashtag-common-utils';
+import { selectedConfig } from '@hashtag.io-microservices/hashtag-common-utils';
 
 const app = express();
 
 // app.use((req, res, next) => {});
 
 const userProxyMiddleware = createProxyMiddleware<Request, Response>({
-  target: selectedConfig.services.userServicePort || 'http://localhost:3500',
+  target: selectedConfig.services.userService.url,
   changeOrigin: true,
   pathRewrite: {
     '^/api/users': '',

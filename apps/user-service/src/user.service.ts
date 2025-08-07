@@ -6,8 +6,11 @@ import {
   InvalidCredentialsError,
   createAccessToken,
   createRefreshToken,
-} from '@hashtag-common-utils';
-import { IUser, UserLoginInfo } from '@hashtag-common-types';
+} from '@hashtag.io-microservices/hashtag-common-utils';
+import {
+  IUser,
+  UserLoginInfo,
+} from '@hashtag.io-microservices/hashtag-common-types';
 
 async function getAllUsers(): Promise<IUser[]> {
   const data: IUser[] = await User.find();

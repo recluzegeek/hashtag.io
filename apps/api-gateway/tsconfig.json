@@ -7,9 +7,6 @@
       "path": "../../libs/hashtag-common-utils"
     },
     {
-      "path": "../../libs/hashtag-common-types"
-    },
-    {
       "path": "./tsconfig.app.json"
     },
     {

@@ -1,17 +1,12 @@
 import pkg, { type JwtPayload } from 'jsonwebtoken';
 import { ValidationError } from './errors/validation-error.js';
 
-import UserLoginInfo from '@hashtag-common-types';
-
-// interface UserLoginInfo {
-//   userID: string;
-//   email: string;
-//   name: string;
-// }
-
 import { selectedConfig } from './config.js';
-
 const { sign, verify } = pkg;
+
+import { UserLoginInfo } from '@hashtag.io-microservices/hashtag-common-types';
+
+// import { UserLoginInfo } from '@hashtag-common-types';
 
 import type { Response } from 'express';
 import { successResponse } from './response-handler.js';

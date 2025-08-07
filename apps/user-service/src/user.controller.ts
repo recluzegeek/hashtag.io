@@ -1,8 +1,11 @@
 import type { NextFunction, Request, Response } from 'express';
 
 import userService from './user.service';
-import { IUser } from '@hashtag-common-types';
-import { sendTokens, successResponse } from '@hashtag-common-utils';
+import { IUser } from '@hashtag.io-microservices/hashtag-common-types';
+import {
+  sendTokens,
+  successResponse,
+} from '@hashtag.io-microservices/hashtag-common-utils';
 
 async function register(
   req: Request,

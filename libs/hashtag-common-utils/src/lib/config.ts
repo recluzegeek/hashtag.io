@@ -1,6 +1,6 @@
 import {
-  ServicesConfig,
-  SecretsConfig,
+  type ServicesConfig,
+  type SecretsConfig,
   secretsConfig,
   servicesConfig,
 } from './services.config.js';

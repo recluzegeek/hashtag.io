@@ -16,14 +16,6 @@
     "skipLibCheck": true,
     "strict": true,
     "target": "es2022",
-    "customConditions": ["development"],
-    "paths": {
-      "@hashtag-common-types": ["libs/hashtag-common-types/src/index"],
-      "@hashtag-common-types/*": ["libs/hashtag-common-types/src/*"],
-      "@hashtag-common-ui": ["libs/hashtag-common-ui/src/index"],
-      "@hashtag-common-ui/*": ["libs/hashtag-common-ui/src/*"],
-      "@hashtag-common-utils": ["libs/hashtag-common-utils/src/index"],
-      "@hashtag-common-utils/*": ["libs/hashtag-common-utils/src/*"]
-    }
+    "customConditions": ["development"]
   }
 }
