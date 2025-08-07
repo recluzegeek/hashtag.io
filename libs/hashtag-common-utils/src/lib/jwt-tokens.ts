@@ -1,7 +1,13 @@
 import pkg, { type JwtPayload } from 'jsonwebtoken';
 import { ValidationError } from './errors/validation-error.js';
 
-import { UserLoginInfo } from '@hashtag-common-types';
+import UserLoginInfo from '@hashtag-common-types';
+
+// interface UserLoginInfo {
+//   userID: string;
+//   email: string;
+//   name: string;
+// }
 
 import { selectedConfig } from './config.js';
 
@@ -51,7 +57,7 @@ function verifyToken(
   errorMessage: string
 ): JwtPayload {
   const payload = verify(token, secret) as JwtPayload;
-  if (!payload?.id) {
+  if (!payload?.userID) {
     throw new ValidationError([errorMessage]);
   }
   return payload;

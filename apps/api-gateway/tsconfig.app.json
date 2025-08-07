@@ -18,5 +18,13 @@
     "eslint.config.js",
     "eslint.config.cjs",
     "eslint.config.mjs"
+  ],
+  "references": [
+    {
+      "path": "../../libs/hashtag-common-utils/tsconfig.lib.json"
+    },
+    {
+      "path": "../../libs/hashtag-common-types/tsconfig.lib.json"
+    }
   ]
 }

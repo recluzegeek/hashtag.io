@@ -1,17 +1,23 @@
-/**
- * This is not a production server yet!
- * This is only a minimal backend to get started.
- */
-
 import express from 'express';
-import * as path from 'path';
-import dotenv from 'dotenv'
+import type { Request, Response } from 'express';
+import { createProxyMiddleware } from 'http-proxy-middleware';
 
-dotenv.config()
+import IUser from '@hashtag-common-types';
+import { selectedConfig } from '@hashtag-common-utils';
 
 const app = express();
 
-app.use('/assets', express.static(path.join(__dirname, 'assets')));
+// app.use((req, res, next) => {});
+
+const userProxyMiddleware = createProxyMiddleware<Request, Response>({
+  target: selectedConfig.services.userServicePort || 'http://localhost:3500',
+  changeOrigin: true,
+  pathRewrite: {
+    '^/api/users': '',
+  },
+});
+
+app.use('/api/users', userProxyMiddleware);
 
 app.get('/api', (req, res) => {
   res.send({ message: 'Welcome to api-gateway!' });
@@ -21,4 +27,5 @@ const port = process.env.API_GATEWAY_PORT || 3100;
 const server = app.listen(port, () => {
   console.log(`Listening at http://localhost:${port}/api`);
 });
+
 server.on('error', console.error);
