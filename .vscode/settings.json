@@ -5,5 +5,8 @@
   "files.autoSave": "onWindowChange",
   "editor.formatOnSave": true,
   "editor.defaultFormatter": "esbenp.prettier-vscode",
-  "prettier.printWidth": 100
+  "prettier.printWidth": 100,
+  "editor.codeActionsOnSave": {
+    "source.organizeImports": "always"
+  }
 }

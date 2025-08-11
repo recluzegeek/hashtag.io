@@ -2,14 +2,13 @@ import User from './user.model';
 import bcrypt from 'bcrypt';
 
 import {
-  RecordNotFoundError,
-  InvalidCredentialsError,
+  AppError,
   createAccessToken,
   createRefreshToken,
 } from '@hashtag.io-microservices/hashtag-common-utils';
 import {
   IUser,
-  UserLoginInfo,
+  IUserLoginInfo,
 } from '@hashtag.io-microservices/hashtag-common-types';
 
 async function getAllUsers(): Promise<IUser[]> {
@@ -30,13 +29,13 @@ async function loginUser(
 ): Promise<{ accessToken: string; refreshToken: string }> {
   const user = await User.findOne({ email });
 
-  if (!user) throw new RecordNotFoundError('User', email);
+  if (!user) throw AppError.recordNotFound('User', email);
   const isMatch = await bcrypt.compare(password, user.password);
   if (!isMatch) {
-    throw new InvalidCredentialsError();
+    throw AppError.authError();
   }
 
-  const userLoginInfo: UserLoginInfo = {
+  const userLoginInfo: IUserLoginInfo = {
     email: user.email,
     userID: user.id,
     username: user.username,

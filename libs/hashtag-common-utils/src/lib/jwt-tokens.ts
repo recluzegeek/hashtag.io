@@ -1,23 +1,22 @@
-import pkg, { type JwtPayload } from 'jsonwebtoken';
-import { ValidationError } from './errors/validation-error.js';
-
-import { selectedConfig } from './config.js';
+import pkg from 'jsonwebtoken';
 const { sign, verify } = pkg;
 
-import { UserLoginInfo } from '@hashtag.io-microservices/hashtag-common-types';
+import { selectedConfig } from './config.js';
 
-// import { UserLoginInfo } from '@hashtag-common-types';
+import { IUserLoginInfo } from '@hashtag.io-microservices/hashtag-common-types';
 
 import type { Response } from 'express';
+import { AppError } from './app-errors.js';
 import { successResponse } from './response-handler.js';
 
-function createAccessToken(data: UserLoginInfo): string {
+function createAccessToken(data: IUserLoginInfo): string {
   return sign({ data }, selectedConfig.secrets.accessTokenSecret, {
-    expiresIn: 15 * 60, // expires in 15 mins
+    // TODO: increased expiration time, should revert back to 15 in prod.
+    expiresIn: 1500 * 60, // expires in 15 mins
   });
 }
 
-function createRefreshToken(data: UserLoginInfo): string {
+function createRefreshToken(data: IUserLoginInfo): string {
   return sign({ data }, selectedConfig.secrets.refreshTokenSecret, {
     expiresIn: '90d',
   });
@@ -46,22 +45,23 @@ function sendRefreshToken(res: Response, refreshToken: string): void {
   });
 }
 
-function verifyToken(
-  token: string,
-  secret: string,
-  errorMessage: string
-): JwtPayload {
-  const payload = verify(token, secret) as JwtPayload;
-  if (!payload?.userID) {
-    throw new ValidationError([errorMessage]);
+function verifyToken(token: string): IUserLoginInfo {
+  try {
+    const decoded = verify(token, selectedConfig.secrets.accessTokenSecret) as {
+      data: IUserLoginInfo;
+    };
+    return decoded.data;
+  } catch (err) {
+    throw AppError.authError('Invalid or expired token.', [
+      err instanceof Error ? err.message : 'Token verification failed.',
+    ]);
   }
-  return payload;
 }
 
 export {
   createAccessToken,
-  sendTokens,
   createRefreshToken,
   sendRefreshToken,
+  sendTokens,
   verifyToken,
 };

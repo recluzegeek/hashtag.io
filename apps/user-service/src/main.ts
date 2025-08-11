@@ -1,6 +1,9 @@
 import express from 'express';
 import * as path from 'path';
-import { selectedConfig } from '@hashtag.io-microservices/hashtag-common-utils';
+import {
+  errorMiddleware,
+  selectedConfig,
+} from '@hashtag.io-microservices/hashtag-common-utils';
 import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
 
@@ -14,6 +17,8 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 
 app.use('/', UserRouter);
+
+app.use(errorMiddleware);
 
 const port = selectedConfig.services.userService.port || 3500;
 const server = app.listen(port, () => {

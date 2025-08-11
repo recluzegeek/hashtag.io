@@ -38,4 +38,19 @@ async function login(
   }
 }
 
-export default { register, login };
+async function logout(req: Request, res: Response, next: NextFunction) {
+  try {
+    res.clearCookie('refreshToken');
+    successResponse(res, {}, 'Logout Successfully');
+  } catch (error) {
+    next(error);
+  }
+}
+
+// async function forgotPassword(
+//   req: Request,
+//   res: Response,
+//   next: NextFunction
+// ) {}
+
+export default { register, login, logout };

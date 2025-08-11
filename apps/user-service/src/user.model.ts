@@ -1,5 +1,5 @@
 import mongoose, { Schema } from 'mongoose';
-import { IUser } from '@hashtag-common-types';
+import { IUser } from '@hashtag.io-microservices/hashtag-common-types';
 
 const UserSchema: Schema = new Schema(
   {

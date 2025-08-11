@@ -1,34 +1,19 @@
 import type { Response } from 'express';
-import { AppError } from './errors/app-errors.js';
-import mongoose from 'mongoose';
+import { AppError } from './app-errors.js';
 import logger from './logger.js';
+import { sendErrorResponse } from './response-handler.js';
 
 export const handleError = (err: AppError, res: Response) => {
-  if (err instanceof mongoose.Error.ValidationError) {
-    logger.warn(`Validation Error:  ${JSON.stringify(err.errors, null, 2)}`);
-    return res.status(err.statusCode).json({
-      status: err.status,
-      message: err.message,
-      errors: err.errors,
-    });
+  if (err.name === 'AuthError') {
+    logger.warn(`Authentication Error: ${JSON.stringify(err.errors, null, 2)}`);
+    return sendErrorResponse(res, err);
   }
 
   // Custom app errors
   if (err instanceof AppError) {
     logger.error(`[AppError] ${err.name}: ${err.message}`);
-    return res.status(err.statusCode).json({
-      status: err.status,
-      message: err.message,
-    });
+    return sendErrorResponse(res, err);
   }
-
-  //   if (err.isOperational) {
-  //   	logger.error(`Operational Error: ${err}`);
-  //   	return res.status(err.statusCode).json({
-  //   		status: err.status,
-  //   		message: err.message,
-  //   	});
-  //   }
 
   logger.error(`ERROR: ${err}`);
   return res.status(500).json({

@@ -1,15 +1,12 @@
 import mongoose from 'mongoose';
-import logger from './logger.js';
 import { selectedConfig } from './config.js';
+import logger from './logger.js';
 
 // Use native ES6 promise
 mongoose.Promise = global.Promise;
 
 // Connect to MongoDB
-mongoose.connect(selectedConfig.database.url, {
-  useUnifiedTopology: true,
-} as mongoose.ConnectOptions);
-
+mongoose.connect(selectedConfig.database.url);
 const db = mongoose.connection;
 
 db.on('error', () => {
