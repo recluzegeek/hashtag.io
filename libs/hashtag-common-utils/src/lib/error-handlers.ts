@@ -1,6 +1,6 @@
 import type { Response } from 'express';
 import { AppError } from './app-errors.js';
-import logger from './logger.js';
+import { logger } from './logger.js';
 import { sendErrorResponse } from './response-handler.js';
 
 export const handleError = (err: AppError, res: Response) => {

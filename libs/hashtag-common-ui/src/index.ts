@@ -1,1 +1,1 @@
-export * from './lib/hashtag-common-ui.js';
+export * from './lib/hashtag-common-ui';

@@ -1,7 +1,7 @@
-# hashtag-common-ui
+# @hashtag.io-microservices/hashtag-common-ui
 
 This library was generated with [Nx](https://nx.dev).
 
-## Building
+## Running unit tests
 
-Run `nx build hashtag-common-ui` to build the library.
+Run `nx test @hashtag.io-microservices/hashtag-common-ui` to execute the unit tests via [Vitest](https://vitest.dev/).

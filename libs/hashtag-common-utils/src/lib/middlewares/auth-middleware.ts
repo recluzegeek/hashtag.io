@@ -1,7 +1,7 @@
 import { IGetUserAuthInfoRequest } from '@hashtag.io-microservices/hashtag-common-types';
 import type { NextFunction, Response } from 'express';
 import { AppError } from '../app-errors.js';
-import { verifyToken } from '../jwt-tokens.js';
+import { verifyJwtToken } from '../jwt-tokens.js';
 
 // Middleware to protect routes
 export const auth = (
@@ -20,7 +20,7 @@ export const auth = (
 
   try {
     // Verify the token
-    const payload = verifyToken(token);
+    const payload = verifyJwtToken(token);
     req.user = payload;
     next();
   } catch (error) {

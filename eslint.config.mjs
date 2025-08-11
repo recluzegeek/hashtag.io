@@ -45,7 +45,7 @@ export default [
     ],
     // Override or add rules here
     rules: {
-      semi: ["error", "always"]
+      semi: ['error', 'always'],
     },
   },
 ];

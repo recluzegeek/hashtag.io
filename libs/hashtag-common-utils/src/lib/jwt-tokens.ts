@@ -45,7 +45,7 @@ function sendRefreshToken(res: Response, refreshToken: string): void {
   });
 }
 
-function verifyToken(token: string): IUserLoginInfo {
+function verifyJwtToken(token: string): IUserLoginInfo {
   try {
     const decoded = verify(token, selectedConfig.secrets.accessTokenSecret) as {
       data: IUserLoginInfo;
@@ -63,5 +63,5 @@ export {
   createRefreshToken,
   sendRefreshToken,
   sendTokens,
-  verifyToken,
+  verifyJwtToken,
 };

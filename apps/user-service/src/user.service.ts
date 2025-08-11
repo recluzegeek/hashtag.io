@@ -1,15 +1,15 @@
-import User from './user.model';
 import bcrypt from 'bcrypt';
+import User from './user.model';
 
+import {
+  IUser,
+  IUserLoginInfo,
+} from '@hashtag.io-microservices/hashtag-common-types';
 import {
   AppError,
   createAccessToken,
   createRefreshToken,
 } from '@hashtag.io-microservices/hashtag-common-utils';
-import {
-  IUser,
-  IUserLoginInfo,
-} from '@hashtag.io-microservices/hashtag-common-types';
 
 async function getAllUsers(): Promise<IUser[]> {
   const data: IUser[] = await User.find();

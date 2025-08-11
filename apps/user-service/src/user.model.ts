@@ -1,5 +1,5 @@
-import mongoose, { Schema } from 'mongoose';
 import { IUser } from '@hashtag.io-microservices/hashtag-common-types';
+import mongoose, { Schema } from 'mongoose';
 
 const UserSchema: Schema = new Schema(
   {
@@ -28,6 +28,9 @@ const UserSchema: Schema = new Schema(
     address: String,
     city: String,
     zip: Number,
+    passwordResetToken: String,
+    passwordResetExpires: Date,
+    welcomeEmailToken: String,
   },
   { timestamps: true }
 );

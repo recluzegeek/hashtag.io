@@ -10,4 +10,7 @@ export interface IUser extends Document {
   address?: string;
   city?: string;
   zip?: number;
+  passwordResetToken?: string;
+  passwordResetExpires: Date;
+  welcomeEmailToken?: string;
 }

@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 import { selectedConfig } from './config.js';
-import logger from './logger.js';
+import { logger } from './logger.js';
 
 // Use native ES6 promise
 mongoose.Promise = global.Promise;
