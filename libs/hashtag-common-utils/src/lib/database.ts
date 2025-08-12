@@ -20,6 +20,10 @@ db.once('open', () => {
   logger.debug('MongoDB connection with database succeeded.');
 });
 
+db.on('reconnecting', () => {
+  logger.debug('Reconnecting with MongoDB.');
+});
+
 db.on('disconnected', () => {
   logger.warn(`MongoDB connection lost.`);
 });
@@ -31,4 +35,4 @@ process.on('SIGINT', () => {
   process.exit(0);
 });
 
-export default db;
+export { db };

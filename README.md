@@ -6,7 +6,7 @@ This project is inspired from [Subhajit25Mondal/hashtag.io](https://github.com/S
 
 ## Requirements
 
-Latest version of NodeJs, MongoDB, and [suggested extensions](./.vscode/extensions.json). 
+Latest version of NodeJs, MongoDB, RabbitMQ, and [suggested extensions](./.vscode/extensions.json).
 
 ### Install Nx Console
 
@@ -49,22 +49,22 @@ Nx Console is an editor extension that enriches your developer experience. It le
 
    ```bash
    nx show project <project-name> --web=false
-   
+
    nx show project frontend --web=false
    nx show project user-service --web=false
    ```
 
    Or better, use the [Nx Console extension](https://marketplace.visualstudio.com/items?itemName=nrwl.angular-console) to easily browse and run tasks within your IDE.
 
-    ![Nx Console Preview](./images/nx-console-preview.png)
+   ![Nx Console Preview](./images/nx-console-preview.png)
 
-    For an introduction to Nx workspace capabilities, visit the [Nx monorepo tutorial](https://nx.dev/getting-started/tutorials/react-monorepo-tutorial?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) or run:
+   For an introduction to Nx workspace capabilities, visit the [Nx monorepo tutorial](https://nx.dev/getting-started/tutorials/react-monorepo-tutorial?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) or run:
 
-    ```bash
-    nx graph --no-open
-    ```
+   ```bash
+   nx graph --no-open
+   ```
 
-    to visualize project dependencies and architecture.
+   to visualize project dependencies and architecture.
 
 ### How to run Task (Project)?
 
@@ -72,34 +72,34 @@ Here I've given an example on how to run a project without using Nx Console. The
 
 1. First view the available targets for each project using `nx show project frontend --web=false`. This gives us brief information about the project and especially the available targets to us
 
-    ```bash
-    >>> nx show project frontend --web=false 
-    Name: @hashtag.io/frontend
-    Root: apps/frontend
-    Tags: npm:private
-    Implicit Dependencies:
-    Targets:
-    - typecheck:   tsc --build --emitDeclarationOnly
-    - build:       react-router build
-    - dev:         react-router dev
-    - start:       react-router-serve build/server/index.js
-    - build-deps:  nx:noop
-    - watch-deps:  npx nx watch --projects @hashtag.io/frontend --includeDependentProjects -- npx nx build-deps @hashtag.io/frontend   
-    - lint:        eslint .
-    - test:        jest
-    ```
+   ```bash
+   >>> nx show project frontend --web=false
+   Name: @hashtag.io/frontend
+   Root: apps/frontend
+   Tags: npm:private
+   Implicit Dependencies:
+   Targets:
+   - typecheck:   tsc --build --emitDeclarationOnly
+   - build:       react-router build
+   - dev:         react-router dev
+   - start:       react-router-serve build/server/index.js
+   - build-deps:  nx:noop
+   - watch-deps:  npx nx watch --projects @hashtag.io/frontend --includeDependentProjects -- npx nx build-deps @hashtag.io/frontend
+   - lint:        eslint .
+   - test:        jest
+   ```
 
 2. Start the development server for the frontend with:
 
-    ```bash
-    nx dev frontend
-    ```
+   ```bash
+   nx dev frontend
+   ```
 
 3. Build a production-ready bundle for the frontend:
 
-    ```bash
-    nx build frontend
-    ```
+   ```bash
+   nx build frontend
+   ```
 
 Targets are either automatically inferred by Nx or configured in `project.json` or `package.json`.
 
@@ -126,4 +126,3 @@ npx nx g @nx/react:lib mylib
 You can use `npx nx list` to get a list of installed plugins. Then, run `npx nx list <plugin-name>` to learn about more specific capabilities of a particular plugin. Alternatively, [install Nx Console](https://nx.dev/getting-started/editor-setup?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) to browse plugins and generators in your IDE.
 
 [Learn more about Nx plugins &raquo;](https://nx.dev/concepts/nx-plugins?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) | [Browse the plugin registry &raquo;](https://nx.dev/plugin-registry?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-

@@ -1,11 +1,11 @@
-import express from 'express';
-import * as path from 'path';
 import {
   errorMiddleware,
   selectedConfig,
 } from '@hashtag.io-microservices/hashtag-common-utils';
 import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
+import express from 'express';
+import * as path from 'path';
 
 import { UserRouter } from './user.route';
 
@@ -24,4 +24,5 @@ const port = selectedConfig.services.userService.port || 3500;
 const server = app.listen(port, () => {
   console.log(`Listening at http://localhost:${port}/api`);
 });
+
 server.on('error', console.error);

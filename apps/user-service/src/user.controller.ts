@@ -1,9 +1,14 @@
 import type { NextFunction, Request, Response } from 'express';
 
-import { IUser } from '@hashtag.io-microservices/hashtag-common-types';
 import {
+  IForgetPasswordNotification,
+  IUser,
+} from '@hashtag.io-microservices/hashtag-common-types';
+import {
+  amqConnection,
   AppError,
   logger,
+  selectedConfig,
   sendTokens,
   successResponse,
 } from '@hashtag.io-microservices/hashtag-common-utils';
@@ -67,7 +72,21 @@ async function forgotPassword(
     user.passwordResetToken = token;
     await user.save();
 
+    // dispatch forget password email notification job
+    const payload: IForgetPasswordNotification = {
+      email,
+      resetToken: token,
+      // TODO: update this reset url accordingly
+      resetUrl: `localhost:3500/${token}`,
+    };
+
+    await amqConnection.sendToQueue(
+      selectedConfig.queues.passwordResetQueue,
+      payload
+    );
+
     logger.info(`Token sent via email ${token}`);
+    res.send('Email Queued...!');
   } catch (error) {
     next(error);
   }

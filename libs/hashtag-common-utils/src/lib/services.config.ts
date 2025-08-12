@@ -1,7 +1,17 @@
+export interface QueuesConfig {
+  passwordResetQueue: string;
+  welcomeEmailQueue: string;
+}
+
 export interface ServiceEndpoint {
+  protocol: string;
   host: string;
   port: number;
   url: string;
+}
+
+export interface NotificationConfig {
+  name: string;
 }
 
 export interface ServicesConfig {
@@ -12,6 +22,7 @@ export interface ServicesConfig {
   apiGateway: ServiceEndpoint;
   frontend: ServiceEndpoint;
   frontendPreview: ServiceEndpoint;
+  rabbitmq: ServiceEndpoint;
 }
 
 export interface SecretsConfig {
@@ -28,13 +39,21 @@ const parseHost = (host: string | undefined, fallback: string): string =>
 function createServiceEndpoint(
   hostEnv: string | undefined,
   portEnv: string | undefined,
-  defaultPort: number
+  defaultPort: number,
+  protocol = 'http'
 ): ServiceEndpoint {
   const host = parseHost(hostEnv, 'localhost');
   const port = parsePort(portEnv, defaultPort);
-  const url = `http://${host}:${port}`;
-  return { host, port, url };
+  const url = `${protocol}://${host}:${port}`;
+  return { protocol, host, port, url };
 }
+
+const queuesConfig: QueuesConfig = {
+  passwordResetQueue:
+    process.env.PASSWORD_RESET_QUEUE || 'notification.email.password',
+  welcomeEmailQueue:
+    process.env.WELCOME_EMAIL_QUEUE || 'notification.email.welcome',
+};
 
 const servicesConfig: ServicesConfig = {
   userService: createServiceEndpoint(
@@ -72,6 +91,12 @@ const servicesConfig: ServicesConfig = {
     process.env.FRONTEND_PREVIEW_PORT,
     4300
   ),
+  rabbitmq: createServiceEndpoint(
+    process.env.RABBITMQ_SERVICE_HOST,
+    process.env.RABBITMQ_SERVICE_PORT,
+    5672,
+    'amqp'
+  ),
 };
 
 const secretsConfig: SecretsConfig = {
@@ -79,4 +104,4 @@ const secretsConfig: SecretsConfig = {
   refreshTokenSecret: process.env.REFRESH_TOKEN_SECRET || '',
 };
 
-export { servicesConfig, secretsConfig };
+export { queuesConfig, secretsConfig, servicesConfig };

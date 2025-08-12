@@ -1,5 +1,5 @@
-import express from 'express';
 import type { Request, Response } from 'express';
+import express from 'express';
 import { createProxyMiddleware } from 'http-proxy-middleware';
 
 import { selectedConfig } from '@hashtag.io-microservices/hashtag-common-utils';
@@ -22,7 +22,7 @@ app.get('/api', (req, res) => {
   res.send({ message: 'Welcome to api-gateway!' });
 });
 
-const port = process.env.API_GATEWAY_PORT || 3100;
+const port = selectedConfig.services.apiGateway.port;
 const server = app.listen(port, () => {
   console.log(`Listening at http://localhost:${port}/api`);
 });

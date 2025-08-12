@@ -1,26 +1,29 @@
 import {
-  type ServicesConfig,
+  type QueuesConfig,
+  queuesConfig,
   type SecretsConfig,
   secretsConfig,
+  type ServicesConfig,
   servicesConfig,
 } from './services.config.js';
 
-interface ServerConfig {
-  port: number | string;
-  hostname: string;
+interface AppConfig {
+  server: ServerConfig;
+  database: DatabaseConfig;
+  queues: QueuesConfig;
+  services: ServicesConfig;
+  secrets: SecretsConfig;
+  isDev: boolean;
+  isProd: boolean;
 }
 
 interface DatabaseConfig {
   url: string;
 }
 
-interface AppConfig {
-  server: ServerConfig;
-  database: DatabaseConfig;
-  services: ServicesConfig;
-  secrets: SecretsConfig;
-  isDev: boolean;
-  isProd: boolean;
+interface ServerConfig {
+  port: number | string;
+  hostname: string;
 }
 
 const env = (process.env.NODE_ENV || 'development') as
@@ -43,6 +46,7 @@ const config: Record<
     },
     services: servicesConfig,
     secrets: secretsConfig,
+    queues: queuesConfig,
   },
   production: {
     server: {
@@ -56,6 +60,7 @@ const config: Record<
     },
     services: servicesConfig,
     secrets: secretsConfig,
+    queues: queuesConfig,
   },
 };
 
