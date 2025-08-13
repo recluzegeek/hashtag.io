@@ -1,6 +1,13 @@
 export interface QueuesConfig {
+  exchangeName: string;
+  exchangeType: string;
   passwordResetQueue: string;
   welcomeEmailQueue: string;
+}
+
+export interface RoutingKeys {
+  passwordForget: string;
+  passwordReset: string;
 }
 
 export interface ServiceEndpoint {
@@ -49,10 +56,17 @@ function createServiceEndpoint(
 }
 
 const queuesConfig: QueuesConfig = {
+  exchangeName: process.env.EXCHANGE_NAME || 'hashtag.io',
+  exchangeType: process.env.EXCHANGE_TYPE || 'direct',
   passwordResetQueue:
     process.env.PASSWORD_RESET_QUEUE || 'notification.email.password',
   welcomeEmailQueue:
     process.env.WELCOME_EMAIL_QUEUE || 'notification.email.welcome',
+};
+
+const routingKeysConfig: RoutingKeys = {
+  passwordForget: process.env.PASSWORD_FORGET_ROUTING_KEY || 'password.forget',
+  passwordReset: process.env.PASSWORD_RESET_ROUTING_KEY || 'password.reset',
 };
 
 const servicesConfig: ServicesConfig = {
@@ -104,4 +118,4 @@ const secretsConfig: SecretsConfig = {
   refreshTokenSecret: process.env.REFRESH_TOKEN_SECRET || '',
 };
 
-export { queuesConfig, secretsConfig, servicesConfig };
+export { queuesConfig, routingKeysConfig, secretsConfig, servicesConfig };

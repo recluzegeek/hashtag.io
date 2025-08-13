@@ -1,6 +1,8 @@
 import {
   type QueuesConfig,
   queuesConfig,
+  type RoutingKeys,
+  routingKeysConfig,
   type SecretsConfig,
   secretsConfig,
   type ServicesConfig,
@@ -10,6 +12,7 @@ import {
 interface AppConfig {
   server: ServerConfig;
   database: DatabaseConfig;
+  routingKeys: RoutingKeys;
   queues: QueuesConfig;
   services: ServicesConfig;
   secrets: SecretsConfig;
@@ -47,6 +50,7 @@ const config: Record<
     services: servicesConfig,
     secrets: secretsConfig,
     queues: queuesConfig,
+    routingKeys: routingKeysConfig,
   },
   production: {
     server: {
@@ -61,6 +65,7 @@ const config: Record<
     services: servicesConfig,
     secrets: secretsConfig,
     queues: queuesConfig,
+    routingKeys: routingKeysConfig,
   },
 };
 

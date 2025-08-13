@@ -309,3 +309,412 @@ Nice! You’re designing a clean, scalable architecture for your monorepo with m
 ### Would you like me to help you write a sample Kafka producer/consumer or the message interfaces inside Nx?
 
 Or how to wire your services and message broker?
+
+---
+
+2025-08-13 02:36:59 [info]: Message sent to queue "notification.email.password" with routing key "password.forget": {  
+ "email": "recluse@gmail.com",
+"resetToken": "876011292a507c6acef816f5067aa1d496f5635b",
+"resetUrl": "http://localhost:3500/reset/876011292a507c6acef816f5067aa1d496f5635b"
+}
+2025-08-13 02:36:59 [info]: Token "876011292a507c6acef816f5067aa1d496f5635b" sent to email: recluse@gmail.com
+
+NX Successfully ran target build for project @hashtag.io-microservices/notification-service and 2 tasks it depends on
+Nx read the output from the cache instead of running the command for 1 out of 3 tasks.
+2025-08-13 02:36:59 [info]: Message received to queue "notification.email.password" with routing key "password.reset": "{\"email\":\"recluse@gmail.com\",\"resetToken\":\"876011292a507c6acef816f5067aa1d496f5635b\",\"resetUrl\":\"http://localhost:3500/reset/876011292a507c6acef816f5067aa1d496f5635b\"}"
+
+import client, { Channel, ChannelModel } from 'amqplib';
+import { selectedConfig } from './config.js';
+import { logger } from './logger.js';
+
+// means the consume method expects a callback function that takes a string and returns anything.
+type HandlerCB = (msg: string) => any;
+
+class RabbitMQConnection {
+connection!: ChannelModel;
+channel!: Channel;
+private connected = false;
+private exchangeName = selectedConfig.queues.exchangeName;
+private exchangeType = selectedConfig.queues.exchangeType;
+
+private async connect() {
+if (this.connected && this.channel) return;
+else this.connected = true;
+
+    try {
+      logger.info(`⌛️ Connecting to Rabbit-MQ Server`);
+
+      //   this.connection = await client.connect(
+      //     selectedConfig.services.rabbitmq.url
+      //   );
+
+      this.connection = await client.connect({
+        protocol: selectedConfig.services.rabbitmq.protocol,
+        hostname: selectedConfig.services.rabbitmq.host,
+        port: selectedConfig.services.rabbitmq.port,
+        frameMax: 0x2000,
+        vhost: '/',
+      });
+
+      logger.debug(`Rabbit MQ Connection is ready`);
+
+      this.channel = await this.connection.createChannel();
+
+      logger.info(`🛸 Created RabbitMQ Channel successfully`);
+    } catch (error) {
+      logger.error(`Not connected to MQ Server`);
+      throw error;
+    }
+
+}
+
+// ch.publish publishes the message to an exchange, in contrasts with ch.sendToQueue which directly sends
+// messages to queues bypassing exchanges routing mechanism
+// In this scenario, we would want to adopt publish/subscribe instead of producer/consumer model
+
+// 1. Create connection
+// 2. Assert/declare exchange
+// 3. Assert/declare and bind queue, except when using direct or fanout exchange type
+// 4. Publish the message
+async publish(queue: string, routingKey: string, message: object) {
+try {
+if (!this.channel) {
+await this.connect();
+}
+
+      await this.channel.assertExchange(this.exchangeName, this.exchangeType, {
+        durable: true,
+      });
+      await this.channel.assertQueue(queue, { durable: true });
+      await this.channel.bindQueue(queue, this.exchangeName, routingKey); // routing key here is binding key
+      this.channel.publish(
+        this.exchangeName,
+        routingKey, // routing key here is routing key ...:)
+        Buffer.from(JSON.stringify(message))
+      );
+
+      logger.info(
+        `Message sent to queue "${queue}" with routing key "${routingKey}": ${JSON.stringify(
+          message,
+          null,
+          2
+        )}`
+      );
+    } catch (error) {
+      logger.error(error);
+      throw error;
+    }
+
+}
+
+async subscribe(
+queue: string,
+routingKey: string,
+handleIncomingNotification: HandlerCB
+) {
+try {
+if (!this.channel) {
+await this.connect();
+}
+
+      await this.channel.assertExchange(this.exchangeName, this.exchangeType, {
+        durable: true,
+      });
+      await this.channel.assertQueue(queue, { durable: true });
+      // routingKeys.map(
+      //   async (routingKey) =>
+      //     await this.channel.bindQueue(queue, this.exchangeName, routingKey)
+      // );
+      await this.channel.bindQueue(queue, this.exchangeName, routingKey);
+
+      await this.channel.consume(
+        queue,
+        async (msg) => {
+          {
+            if (!msg) {
+              logger.error(`Invalid incoming message`);
+              return;
+            }
+            handleIncomingNotification(msg?.content?.toString());
+            logger.info(
+              `Message received from "${queue}" queue with routing key "${routingKey}": ${JSON.stringify(
+                msg.content.toString(),
+                null,
+                2
+              )}`
+            );
+            this.channel.ack(msg);
+          }
+        },
+        {
+          noAck: false,
+        }
+      );
+    } catch (error) {
+      logger.error(error);
+      throw error;
+    }
+
+}
+}
+
+export const amqConnection = new RabbitMQConnection();
+
+    await amqConnection.publish(
+      selectedConfig.queues.passwordResetQueue,
+      'password.forget', // routing key
+      payload
+    );
+
+const server = app.listen(port, async () => {
+console.log(`Listening at http://localhost:${port}/api`);
+
+// handle password reset email notifications
+await amqConnection.subscribe(
+selectedConfig.queues.passwordResetQueue,
+// ['password.reset'], // binding key
+'password.reset', // binding key
+handleIncomingNotification
+);
+});
+
+how's this possible? that amqlib is routing incorrectly?
+
+NODE_ENV=development
+
+API_GATEWAY_HOST=localhost
+API_GATEWAY_PORT=3100
+
+FRONTEND_SERVING_HOST=localhost
+FRONTEND_SERVING_PORT=4200
+
+FRONTEND_PREVIEW_HOST=localhost
+FRONTEND_PREVIEW_PORT=4300
+
+GROUP_SERVICE_HOST=localhost
+GROUP_SERVICE_PORT=3200
+
+NOTIFICATION_SERVICE_HOST=localhost
+NOTIFICATION_SERVICE_PORT=3300
+
+POST_SERVICE_HOST=localhost
+POST_SERVICE_PORT=3400
+
+USER_SERVICE_HOST=localhost
+USER_SERVICE_PORT=3500
+
+RABBITMQ_SERVICE_HOST=localhost
+RABBITMQ_SERVICE_PORT=5672
+
+EXCHANGE_NAME=hashtag.io
+EXCHANGE_TYPE=direct
+
+PASSWORD_RESET_QUEUE=notification.email.password  
+WELCOME_EMAIL_QUEUE=notification.email.welcome
+
+ACCESS_TOKEN_SECRET=
+REFRESH_TOKEN_SECRET=
+
+import {
+type QueuesConfig,
+queuesConfig,
+type SecretsConfig,
+secretsConfig,
+type ServicesConfig,
+servicesConfig,
+} from './services.config.js';
+
+interface AppConfig {
+server: ServerConfig;
+database: DatabaseConfig;
+queues: QueuesConfig;
+services: ServicesConfig;
+secrets: SecretsConfig;
+isDev: boolean;
+isProd: boolean;
+}
+
+interface DatabaseConfig {
+url: string;
+}
+
+interface ServerConfig {
+port: number | string;
+hostname: string;
+}
+
+const env = (process.env.NODE_ENV || 'development') as
+| 'development'
+| 'production';
+
+const config: Record<
+'development' | 'production',
+Omit<AppConfig, 'isDev' | 'isProd'>
+
+> = {
+> development: {
+
+    server: {
+      port: process.env.PORT || 3000,
+      hostname: process.env.HOSTNAME || 'localhost',
+    },
+    database: {
+      url: `mongodb://${process.env.DB_HOST || 'localhost'}:${
+        process.env.DB_PORT || 27017
+      }/${process.env.DB_NAME || 'hashtag_dev'}`,
+    },
+    services: servicesConfig,
+    secrets: secretsConfig,
+    queues: queuesConfig,
+
+},
+production: {
+server: {
+port: process.env.PORT || 3200,
+hostname: process.env.HOSTNAME || 'localhost',
+},
+database: {
+url: `mongodb://${process.env.DB_HOST || 'localhost'}:${
+        process.env.DB_PORT || 27017
+      }/${process.env.DB_NAME || 'hashtag_prod'}`,
+},
+services: servicesConfig,
+secrets: secretsConfig,
+queues: queuesConfig,
+},
+};
+
+export const selectedConfig: AppConfig = {
+...config[env],
+isDev: env === 'development',
+isProd: env === 'production',
+};
+
+export interface QueuesConfig {
+exchangeName: string;
+exchangeType: string;
+passwordResetQueue: string;
+welcomeEmailQueue: string;
+}
+
+export interface ServiceEndpoint {
+protocol: string;
+host: string;
+port: number;
+url: string;
+}
+
+export interface NotificationConfig {
+name: string;
+}
+
+export interface ServicesConfig {
+userService: ServiceEndpoint;
+postService: ServiceEndpoint;
+groupService: ServiceEndpoint;
+notificationService: ServiceEndpoint;
+apiGateway: ServiceEndpoint;
+frontend: ServiceEndpoint;
+frontendPreview: ServiceEndpoint;
+rabbitmq: ServiceEndpoint;
+}
+
+export interface SecretsConfig {
+accessTokenSecret: string;
+refreshTokenSecret: string;
+}
+
+const parsePort = (port: string | undefined, fallback: number): number =>
+port ? parseInt(port, 10) : fallback;
+
+const parseHost = (host: string | undefined, fallback: string): string =>
+host || fallback;
+
+function createServiceEndpoint(
+hostEnv: string | undefined,
+portEnv: string | undefined,
+defaultPort: number,
+protocol = 'http'
+): ServiceEndpoint {
+const host = parseHost(hostEnv, 'localhost');
+const port = parsePort(portEnv, defaultPort);
+const url = `${protocol}://${host}:${port}`;
+return { protocol, host, port, url };
+}
+
+const queuesConfig: QueuesConfig = {
+exchangeName: process.env.EXCHANGE_NAME || 'hashtag.io',
+exchangeType: process.env.EXCHANGE_TYPE || 'direct',
+passwordResetQueue:
+process.env.PASSWORD_RESET_QUEUE || 'notification.email.password',
+welcomeEmailQueue:
+process.env.WELCOME_EMAIL_QUEUE || 'notification.email.welcome',
+};
+
+const servicesConfig: ServicesConfig = {
+userService: createServiceEndpoint(
+process.env.USER_SERVICE_HOST,
+process.env.USER_SERVICE_PORT,
+3500
+),
+postService: createServiceEndpoint(
+process.env.POST_SERVICE_HOST,
+process.env.POST_SERVICE_PORT,
+3400
+),
+groupService: createServiceEndpoint(
+process.env.GROUP_SERVICE_HOST,
+process.env.GROUP_SERVICE_PORT,
+3200
+),
+notificationService: createServiceEndpoint(
+process.env.NOTIFICATION_SERVICE_HOST,
+process.env.NOTIFICATION_SERVICE_PORT,
+3300
+),
+apiGateway: createServiceEndpoint(
+process.env.API_GATEWAY_HOST,
+process.env.API_GATEWAY_PORT,
+3100
+),
+frontend: createServiceEndpoint(
+process.env.FRONTEND_SERVING_HOST,
+process.env.FRONTEND_SERVING_PORT,
+4200
+),
+frontendPreview: createServiceEndpoint(
+process.env.FRONTEND_PREVIEW_HOST,
+process.env.FRONTEND_PREVIEW_PORT,
+4300
+),
+rabbitmq: createServiceEndpoint(
+process.env.RABBITMQ_SERVICE_HOST,
+process.env.RABBITMQ_SERVICE_PORT,
+5672,
+'amqp'
+),
+};
+
+const secretsConfig: SecretsConfig = {
+accessTokenSecret: process.env.ACCESS_TOKEN_SECRET || '',
+refreshTokenSecret: process.env.REFRESH_TOKEN_SECRET || '',
+};
+
+export { queuesConfig, secretsConfig, servicesConfig };
+
+const handleIncomingNotification = (msg: string) => {
+try {
+const parsedMessage = JSON.parse(msg);
+
+    // logger.info(
+    //   `Received Notification: ${JSON.stringify(parsedMessage, null, 2)}`
+    // );
+
+    // TODO: Implement forget password email notification
+
+} catch (error) {
+logger.error(
+`Error While Parsing the message: ${JSON.stringify(error, null, 2)}`
+);
+}
+};

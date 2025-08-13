@@ -13,7 +13,9 @@ const handleIncomingNotification = (msg: string) => {
   try {
     const parsedMessage = JSON.parse(msg);
 
-    console.log(`Received Notification`, parsedMessage);
+    logger.info(
+      `Received Notification: ${JSON.stringify(parsedMessage, null, 2)}`
+    );
 
     // TODO: Implement forget password email notification
   } catch (error) {
@@ -33,8 +35,10 @@ const server = app.listen(port, async () => {
   console.log(`Listening at http://localhost:${port}/api`);
 
   // handle password reset email notifications
-  await amqConnection.consume(
+  await amqConnection.subscribe(
     selectedConfig.queues.passwordResetQueue,
+    // ['password.reset'], // binding key
+    selectedConfig.routingKeys.passwordReset, // binding key
     handleIncomingNotification
   );
 });

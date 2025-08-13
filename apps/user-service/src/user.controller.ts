@@ -77,16 +77,17 @@ async function forgotPassword(
       email,
       resetToken: token,
       // TODO: update this reset url accordingly
-      resetUrl: `localhost:3500/${token}`,
+      resetUrl: `${selectedConfig.services.userService.url}/reset/${token}`,
     };
 
-    await amqConnection.sendToQueue(
+    await amqConnection.publish(
       selectedConfig.queues.passwordResetQueue,
+      selectedConfig.routingKeys.passwordForget, // routing key
       payload
     );
 
-    logger.info(`Token sent via email ${token}`);
-    res.send('Email Queued...!');
+    logger.info(`Token "${token}" sent to email: ${email}`);
+    res.send('Email queued!');
   } catch (error) {
     next(error);
   }

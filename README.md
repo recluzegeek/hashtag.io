@@ -8,6 +8,38 @@ This project is inspired from [Subhajit25Mondal/hashtag.io](https://github.com/S
 
 Latest version of NodeJs, MongoDB, RabbitMQ, and [suggested extensions](./.vscode/extensions.json).
 
+### Basics of RabbitMQ
+
+RabbitMQ supports both **producer/consumer** and **publish/subscribe** messaging models using **queues**, **exchanges**, and **bindings**.
+
+#### Models:
+
+- **Producer/Consumer**:
+  In this direct messaging model, producers send messages straight to queues, and consumers consume from those queues. Messages are **not routed through exchanges** explicitly (though under the hood, a default exchange still routes them by queue name).
+
+- **Publish/Subscribe**:
+  This model makes use of **exchanges** to decouple producers and consumers. Producers publish messages to an exchange, which then routes them to one or more queues **based on bindings** (routing rules). Multiple subscribers (consumers) can receive messages for the same routing pattern.
+
+### Configuration in this project:
+
+```bash
+Exchange Name: hashtag.io
+Queues:
+  - notification.email.password
+  - notification.email.welcome
+
+Routing Key:      used by producer when publishing a message to the exchange
+Binding Key:      used by the exchange to route the message to a queue
+                  (delivery happens when routingKey === bindingKey)
+
+Bindings:
+  - Queue: notification.email.password
+    Binding Keys: password.forget, password.reset
+
+  - Queue: notification.email.welcome
+    Binding Keys: welcome.confirm, welcome.onboard
+```
+
 ### Install Nx Console
 
 Nx Console is an editor extension that enriches your developer experience. It lets you run tasks, generate code, and improves code autocompletion in your IDE. It is available for VSCode and IntelliJ.
@@ -45,6 +77,7 @@ Nx Console is an editor extension that enriches your developer experience. It le
 
 1. Install the [suggested extensions](./.vscode/extensions.json) from extensions panel.
 1. Run `npm install` in the project root.
+1. Copy the `.env.example` to `.env` and modify the variables. You can generate secret keys via `openssl` on both windows via GitBash and on Linux `openssl rand -base64 32`
 1. You can run each project individually by checking available commands using:
 
    ```bash
